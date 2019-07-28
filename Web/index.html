@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Web</title>
+</head>
+<body>
+	<button onclick="fakeAlert();">Send Fake alert</button>
+</body>
+<script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-firestore.js"></script>
+
+	<script>
+
+		var firebaseConfig = {
+			apiKey: "AIzaSyBlSq-UXX1bqlHNXuONrfRNrsCIMDamDp4",
+			authDomain: "hackathon-e9152.firebaseapp.com",
+			databaseURL: "https://hackathon-e9152.firebaseio.com",
+			projectId: "hackathon-e9152",
+			storageBucket: "",
+			messagingSenderId: "886674179234",
+			appId: "1:886674179234:web:abb4056b0eee4328"
+		};
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+
+  var db = firebase.firestore();
+
+  function checkNotif() {
+  	var xhttp = new XMLHttpRequest();
+  	xhttp.onreadystatechange = function() {
+  		if (this.readyState == 4 && this.status == 200) {
+  			console.log(xhttp.responseText);
+  			db.collection("liveFeed").doc("redlands").set({
+  				alert: true
+  			}, { merge: true })
+  			.then(function() {
+  				console.log("Document successfully written!");
+  			})
+  			.catch(function(error) {
+  				console.error("Error writing document: ", error);
+  			});
+  		}
+  	};
+  	xhttp.open("GET", "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2019-07-27&endtime=2019-07-27", true);
+  	xhttp.send();
+  }
+
+
+
+  document.addEventListener("DOMContentLoaded", function() {
+  	//setInterval(function(){ checkNotif() }, 5000);
+  });
+
+  function fakeAlert () {
+  	db.collection("liveFeed").doc("redlands").set({
+  		alert: true
+  	}, { merge: true })
+  	.then(function() {
+  		console.log("Document successfully written!");
+  	})
+  	.catch(function(error) {
+  		console.error("Error writing document: ", error);
+  	});
+  }
+
+</script>
+</html>
